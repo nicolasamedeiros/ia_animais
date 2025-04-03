@@ -27,7 +27,7 @@ def criar_modelo():
         #camada densa
         Dense(512, activation='relu'),
         Dropout(0.5), #reduzir overfitting
-        Dense(2, activation='softmax') # 4 classes: gato, cachorro
+        Dense(2, activation='softmax') # 2 classes: gato, cachorro
     ])
 
     modelo.compile(
@@ -119,3 +119,19 @@ def classificar_imagem(caminho_imagem, modelo):
 
 # Exemplo de uso
 if __name__ == "__main__":
+    #caminhos para os diretorios de dados
+    diretorio_treino = 'dados/treino'
+    diretorio_validacao = 'dados/validacao'
+
+    #criar o modelo
+    modelo = criar_modelo()
+    conjunto_treino, conjunto_validacao = preparar_dados(diretorio_treino, diretorio_validacao)
+    historico = treinar_modelo(modelo, conjunto_treino, conjunto_validacao)
+
+    #salvar modelo 
+    salvar_modelo(modelo)
+
+    #testar com uma nova imagem
+    caminho_imagem = "#caminho pra imagem"
+    classe, probabilidade = classificar_imagem(caminho_imagem, modelo)
+    print(f'A imagem foi classificada como {classe} com {probabilidade::.2f}% de confiança')
